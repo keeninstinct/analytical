@@ -6,6 +6,7 @@ module Analytical
       def initialize(options={})
         super
         check_js_url_key
+        @tracking_command_location = :head_append
       end
 
       def init_javascript(location)
@@ -16,11 +17,14 @@ module Analytical
             var _kmq = _kmq || [];
             function _kms(u){
               setTimeout(function(){
-                var s = document.createElement('script'); var f = document.getElementsByTagName('script')[0]; s.type = 'text/javascript'; s.async = true;
-                s.src = u; f.parentNode.insertBefore(s, f);
+                var d = document, f = d.getElementsByTagName('script')[0],
+                s = d.createElement('script');
+                s.type = 'text/javascript'; s.async = true; s.src = u;
+                f.parentNode.insertBefore(s, f);
               }, 1);
             }
-            _kms('//i.kissmetrics.com/i.js');_kms('#{options[:js_url_key]}');
+            _kms('//i.kissmetrics.com/i.js');
+            _kms('#{options[:js_url_key]}');
           </script>
           HTML
           js
