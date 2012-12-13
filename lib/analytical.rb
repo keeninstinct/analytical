@@ -19,10 +19,10 @@ module Analytical
     @configs ||= {}
     @configs[path] ||= begin
       # Read the config out of the file
-      config = YAML.load(path.read).with_indifferent_access
+      config = YAML.load(path.read).deep_symbolize_keys
 
       # Pull out the correct environment (or toplevel if there isn't an env)
-      env = ::Rails.env || :production
+      env = ::Rails.env.to_sym || :production
       config = config[env] if config.has_key?(env)
 
       # List the modules that were configured
@@ -58,6 +58,16 @@ module Analytical
     end
   end
 
+end
+
+class Hash
+  def deep_symbolize_keys
+    inject({}) { |result, (key, value)|
+      value = value.deep_symbolize_keys if value.is_a?(Hash)
+      result[(key.to_sym rescue key) || key] = value
+      result
+    }
+  end
 end
 
 if defined?(ActionController::Base)
