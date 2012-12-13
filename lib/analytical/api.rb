@@ -114,7 +114,7 @@ module Analytical
       @modules.each do |name, m|
         commands += m.process_queued_commands if m.init_location?(location) || m.initialized
       end
-      commands = commands.delete_if{|c| c.blank? || c.empty?}
+      commands = commands.uniq.delete_if{|c| c.blank? || c.empty?}
       unless commands.empty?
         commands.unshift "<script type='text/javascript'>"
         commands << "</script>"
