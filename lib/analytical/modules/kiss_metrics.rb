@@ -11,9 +11,12 @@ module Analytical
 
       def init_javascript(location)
         init_location(location) do
+          km_cookie_domain_line = options[:km_cookie_domain].present? ?
+              "var KM_COOKIE_DOMAIN = \"#{options[:km_cookie_domain]}\";" : nil
           js = <<-HTML
           <!-- Analytical Init: KissMetrics -->
           <script type="text/javascript">
+            #{km_cookie_domain_line}
             var _kmq = _kmq || [];
             function _kms(u){
               setTimeout(function(){
